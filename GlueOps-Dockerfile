@@ -65,4 +65,4 @@ COPY --from=builder /app/healthz_binary /usr/bin/go-healthz
 RUN mkdir -p /etc/go-healthz
 
 # Set the entrypoint to the new path
-ENTRYPOINT ["/usr/bin/go-healthz", "--config", "/etc/go-healthz/config.yaml"]
+ENTRYPOINT ["/usr/bin/go-healthz", "--config", "/etc/go-healthz/config.yml"]
