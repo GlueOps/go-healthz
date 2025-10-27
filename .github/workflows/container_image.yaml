@@ -77,7 +77,7 @@ jobs:
           build-args: |
             GITHUB_TAG=${{ github.event.workflow_run.head_branch }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_branch }}
+          tags: ${{ steps.meta.outputs.tags }},${{ toLower(env.REGISTRY) }}/${{ toLower(env.IMAGE_NAME) }}:${{ toLower(github.event.workflow_run.head_branch) }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           cache-from: type=gha
