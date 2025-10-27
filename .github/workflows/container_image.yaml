@@ -67,6 +67,22 @@ jobs:
             type=ref,event=tag,prefix=
             type=sha,format=short,prefix=
             type=sha,format=long,prefix=
+
+      - name: 📦 Generate lowercase image tag
+        id: set_tag # Give this step an ID to reference its outputs
+        run: |
+          # 1. Build the original tag string
+          ORIGINAL_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.event.workflow_run.head_branch }}"
+          
+          # 2. Convert it to lowercase using 'tr' (most reliable method)
+          LOWER_TAG=$(echo "$ORIGINAL_TAG" | tr '[:upper:]' '[:lower:]')
+          
+          # 3. Save it as a step output
+          echo "image_tag=$LOWER_TAG" >> $GITHUB_OUTPUT
+          
+          # 4. (Optional) Echo it just to see it in the logs
+          echo "Image tag set to: $LOWER_TAG"
+
       - name: Build and push Docker image
         if: steps.check_semver.outputs.continue == 'true'
         id: build-and-push
@@ -77,7 +93,7 @@ jobs:
           build-args: |
             GITHUB_TAG=${{ github.event.workflow_run.head_branch }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }},${{ toLower(env.REGISTRY) }}/${{ toLower(env.IMAGE_NAME) }}:${{ toLower(github.event.workflow_run.head_branch) }}
+          tags: ${{ steps.meta.outputs.tags }},${{ steps.set_tag.outputs.image_tag }}
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           cache-from: type=gha
