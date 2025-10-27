@@ -60,7 +60,7 @@ FROM debian:bookworm-slim
 # Copy the binary from the builder stage into /usr/bin/
 COPY --from=builder /app/healthz_binary /usr/bin/go-healthz
 
-COPY ./config.yaml /etc/go-healthz/config.yaml
+RUN mkdir -p /etc/go-healthz
 
 # Set the entrypoint to the new path
 ENTRYPOINT ["/usr/bin/go-healthz", "--config", "/etc/go-healthz/config.yaml"]
