@@ -1,0 +1,66 @@
+# --- STAGE 1: Builder ---
+# This stage's only job is to download and extract the correct
+# binary for the target platform.
+FROM alpine:latest AS builder
+
+# 1. Install download tools
+RUN apk add --no-cache ca-certificates curl tar gzip unzip
+
+# 2. Define build-time arguments
+ARG TARGETOS
+ARG TARGETARCH
+ARG GITHUB_TAG=v0.0.1
+
+WORKDIR /app
+
+# 3. Download and Extract Logic
+RUN set -ex; \
+    \
+    # Determine the file extension
+    EXT="tar.gz"; \
+    if [ "${TARGETOS}" = "windows" ]; then \
+        EXT="zip"; \
+    fi; \
+    \
+    # Construct the filename and URL
+    FILENAME="go-healthz_${TARGETOS}_${TARGETARCH}.${EXT}"; \
+    DOWNLOAD_URL="https://github.com/GlueOps/go-healthz/releases/download/${GITHUB_TAG}/${FILENAME}"; \
+    \
+    # Download the file
+    echo "--> Downloading ${DOWNLOAD_URL}"; \
+    curl -fLSO "${DOWNLOAD_URL}"; \
+    \
+    # Extract the binary
+    echo "--> Extracting ${FILENAME}"; \
+    if [ "${EXT}" = "zip" ]; then \
+        unzip -j "${FILENAME}" -d /app; \
+    else \
+        tar -xzf "${FILENAME}" -C /app; \
+    fi; \
+    \
+    # 4. Standardize the binary name for the next stage
+    if [ -f "/app/go-healthz" ]; then \
+        mv /app/go-healthz /app/healthz_binary; \
+    elif [ -f "/app/go-healthz.exe" ]; then \
+        mv /app/go-healthz.exe /app/healthz_binary; \
+    else \
+        echo "Error: Could not find 'go-healthz' or 'go-healthz.exe' in the archive."; \
+        ls -l /app; \
+        exit 1; \
+    fi; \
+    \
+    # 5. Make it executable
+    chmod +x /app/healthz_binary
+
+
+# --- STAGE 2: Final Image ---
+# Use the latest Debian as the final base image
+FROM debian:bookworm-slim
+
+# Copy the binary from the builder stage into /usr/bin/
+COPY --from=builder /app/healthz_binary /usr/bin/go-healthz
+
+COPY ./config.yaml /etc/go-healthz/config.yaml
+
+# Set the entrypoint to the new path
+ENTRYPOINT ["/usr/bin/go-healthz", "--config", "/etc/go-healthz/config.yaml"]
