@@ -28,6 +28,11 @@ docker run --rm -p 8080:8080 \
 
 See the [upstream README](https://github.com/bdwyertech/go-healthz) for configuration options.
 
+The container runs as a **non-root** user (UID/GID `65532`). No Kubernetes
+changes are needed as long as your `bind:` port is `>= 1024` (privileged ports
+still require root or the `NET_BIND_SERVICE` capability) and the mounted config
+is readable by that user (a default ConfigMap mount, mode `0644`, is).
+
 ## How updates work
 
 - The pinned upstream version lives in a single `ARG GITHUB_TAG=...` line in the [`Dockerfile`](./Dockerfile), annotated for Renovate (`datasource=github-releases depName=bdwyertech/go-healthz`).

@@ -36,9 +36,18 @@ FROM debian:bookworm-slim
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
- && mkdir -p /etc/go-healthz
+ && mkdir -p /etc/go-healthz \
+ && groupadd -g 65532 nonroot \
+ && useradd -u 65532 -g 65532 -M -s /usr/sbin/nologin nonroot \
+ && chown nonroot:nonroot /etc/go-healthz
 
 COPY --from=fetch /work/go-healthz /usr/bin/go-healthz
+
+# Run as a non-root user (UID/GID 65532). This needs no Kubernetes changes as
+# long as the configured bind port is >= 1024 (privileged ports still require
+# root or the NET_BIND_SERVICE capability). The UID matches the common
+# "nonroot" convention, so it also satisfies `runAsNonRoot: true` if set.
+USER 65532:65532
 
 # A config is expected to be mounted at /etc/go-healthz/config.yml at runtime.
 ENTRYPOINT ["/usr/bin/go-healthz", "--config", "/etc/go-healthz/config.yml"]
