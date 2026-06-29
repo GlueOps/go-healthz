@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1@sha256:87999aa3d42bdc6bea60565083ee17e86d1f3339802f543c0d03998580f9cb89
 
 # This repo does NOT build go-healthz from source. It repackages the official
 # upstream release binary (https://github.com/bdwyertech/go-healthz) into a
@@ -9,7 +9,7 @@
 ARG GITHUB_TAG=v0.4.11
 
 # --- STAGE 1: download + verify the upstream release binary ---
-FROM alpine:3.21 AS fetch
+FROM alpine:3.21@sha256:48b0309ca019d89d40f670aa1bc06e426dc0931948452e8491e3d65087abc07d AS fetch
 
 ARG GITHUB_TAG
 ARG TARGETOS
@@ -31,7 +31,7 @@ RUN set -eux; \
     chmod +x go-healthz
 
 # --- STAGE 2: minimal runtime image ---
-FROM debian:bookworm-slim
+FROM debian:bookworm-slim@sha256:60eac759739651111db372c07be67863818726f754804b8707c90979bda511df
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates \
