@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/GlueOps/go-healthz/compare/v0.1.1...v0.2.0) (2026-06-29)
+
+
+### Features
+
+* use plain vX.Y.Z release tags (drop component prefix) ([#7](https://github.com/GlueOps/go-healthz/issues/7)) ([039c948](https://github.com/GlueOps/go-healthz/commit/039c948bc27dd18280c72489e735575e6e111487))
+
 ## [0.1.1](https://github.com/GlueOps/go-healthz/compare/go-healthz-v0.1.0...go-healthz-v0.1.1) (2026-06-29)
 
 
