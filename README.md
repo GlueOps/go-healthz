@@ -7,11 +7,14 @@ This repository **does not contain or build the go-healthz source**. It is a thi
 ## Image
 
 ```
-ghcr.io/glueops/go-healthz:<upstream-version>   # e.g. v0.4.11
+ghcr.io/glueops/go-healthz:<release-version>   # e.g. v0.1.0 (this repo's release-please version)
 ghcr.io/glueops/go-healthz:latest
 ```
 
-Images are built for `linux/amd64` and `linux/arm64`.
+Images are built for `linux/amd64` and `linux/arm64`. The image is tagged with
+this repo's release-please version — a single, consistent version scheme. The
+actual upstream go-healthz version that's bundled is pinned by `ARG GITHUB_TAG`
+in the [`Dockerfile`](./Dockerfile) (used only to fetch the right binary).
 
 ## Usage
 
@@ -28,5 +31,6 @@ See the [upstream README](https://github.com/bdwyertech/go-healthz) for configur
 ## How updates work
 
 - The pinned upstream version lives in a single `ARG GITHUB_TAG=...` line in the [`Dockerfile`](./Dockerfile), annotated for Renovate (`datasource=github-releases depName=bdwyertech/go-healthz`).
-- Renovate opens a PR whenever upstream cuts a new release. Merging it rebuilds and republishes the image tagged with the new upstream version.
-- [release-please](https://github.com/googleapis/release-please-action) manages this repo's own changelog and releases from Conventional Commits.
+- Renovate opens a PR whenever upstream cuts a new release; the PR build verifies the new binary downloads and passes checksum verification.
+- [release-please](https://github.com/googleapis/release-please-action) manages this repo's version, changelog, and releases from Conventional Commits.
+- When a release-please release is cut, the image is built and pushed to GHCR **tagged with that release version** (plus `latest`). One version scheme everywhere.
