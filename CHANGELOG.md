@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/GlueOps/go-healthz/compare/v0.2.0...v0.2.1) (2026-06-30)
+
+
+### Continuous Integration
+
+* bring release-please config up to GlueOps convention ([#9](https://github.com/GlueOps/go-healthz/issues/9)) ([4dc6cb3](https://github.com/GlueOps/go-healthz/commit/4dc6cb3986d91ff0a652df258563e86ea2b2b90a))
+
 ## [0.2.0](https://github.com/GlueOps/go-healthz/compare/v0.1.1...v0.2.0) (2026-06-29)
 
 
