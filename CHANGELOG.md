@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2](https://github.com/GlueOps/go-healthz/compare/v0.2.1...v0.2.2) (2026-07-31)
+
+
+### Miscellaneous Chores
+
+* add Apache-2.0 LICENSE ([#16](https://github.com/GlueOps/go-healthz/issues/16)) ([c4d9e42](https://github.com/GlueOps/go-healthz/commit/c4d9e42218d2a573c6b266d0e9d613c64011a117))
+
 ## [0.2.1](https://github.com/GlueOps/go-healthz/compare/v0.2.0...v0.2.1) (2026-06-30)
 
 
