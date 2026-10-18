@@ -9,7 +9,7 @@
 ARG GITHUB_TAG=v0.4.11
 
 # --- STAGE 1: download + verify the upstream release binary ---
-FROM alpine:3.21@sha256:48b0309ca019d89d40f670aa1bc06e426dc0931948452e8491e3d65087abc07d AS fetch
+FROM alpine:3.23@sha256:85fe1e81d6758c208f3e1eed4338a1997e19d4be002d4dd32d3100c9a8c010a0 AS fetch
 
 ARG GITHUB_TAG
 ARG TARGETOS
